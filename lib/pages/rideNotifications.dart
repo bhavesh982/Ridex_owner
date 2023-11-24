@@ -77,6 +77,7 @@ class _RideNotificationsState extends State<RideNotifications> {
                          Row(
                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                            children: [
+                             const Text("yo"),
                              Padding(
                                padding: const EdgeInsets.all(8.0),
                                child: Column(
