@@ -2,6 +2,8 @@ import 'dart:ui';
 
 String userName="";
 Future<String> downloadRef="" as Future<String>;
+String userUID="";
+int generatedOTP=0;
 String imgURL="";
 String uid="";
 String imgURL1="";

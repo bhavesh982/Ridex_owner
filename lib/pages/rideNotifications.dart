@@ -124,13 +124,11 @@ class _RideNotificationsState extends State<RideNotifications> {
                                         children: [
                                           ElevatedButton(onPressed: ()async{
                                             await changeStatusToAccepted(snapshot);
-                                            commonMethods.displaySnackBar(snapshot.child("status").value.toString().trim(),context);
-
+                                              Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideConfirmOTP()));
                                           }, child: const Text("  Accept  ")),
                                           const SizedBox(width: 10,),
                                           ElevatedButton(onPressed: ()async{
                                             await changeStatusToRejected(snapshot);
-                                            commonMethods.displaySnackBar(snapshot.child("status").value.toString().trim(), context);
                                           }, child: const Text("  Reject  ")),
                                         ],
                                       )
@@ -161,6 +159,9 @@ class _RideNotificationsState extends State<RideNotifications> {
   }
 
   changeStatusToAccepted(DataSnapshot snapshot) async{
+    setState(() {
+      userUID=snapshot.key.toString();
+    });
     showDialog(
         barrierDismissible: false,
         context: context,
