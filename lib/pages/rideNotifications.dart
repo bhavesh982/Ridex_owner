@@ -63,7 +63,7 @@ class _RideNotificationsState extends State<RideNotifications> {
                     .child("riderequest")
                     .child(spaceShipSelected),
                 itemBuilder: (context, snapshot, animation, index) {
-                if(snapshot.child("status").value.toString().trim()!="rejected") {
+                if(snapshot.child("status").value.toString().trim()!="rejected" || snapshot.child("status").value.toString().trim()!="accepted") {
                   return Padding(
                    padding: const EdgeInsets.all(12.0),
                    child: Container(
