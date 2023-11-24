@@ -23,7 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //Text Editors
 
   final TextEditingController _emailController= TextEditingController();
-  final TextEditingController _uNameController= TextEditingController();
+  final TextEditingController _companyNameController= TextEditingController();
   final TextEditingController _uPhoneController= TextEditingController();
   final TextEditingController _passwordController= TextEditingController();
   CommonMethods commonMethods= CommonMethods();
@@ -31,38 +31,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final ImagePicker _picker= ImagePicker();
   String timenow = DateTime.now().millisecondsSinceEpoch.toString();
   //Methods
+  chooseImgGallery()async{
+    final pickedfile=await _picker.pickImage(source: ImageSource.gallery);
+    if(pickedfile!=null) {
+      setState(() {
+        imagefile=pickedfile;
+      });
+    }
+  }
   uploadToStorage()async{
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context)=>LoadingDialog
           (messageText: "Uploading"));
-
     Reference firebaseDatabase = FirebaseStorage.instance.ref().child("models").child("${timenow}1");
     UploadTask task=firebaseDatabase.putFile(File(imagefile!.path));
     TaskSnapshot snapshot = await task;
-    String imageURL= await snapshot.ref.getDownloadURL();
+    String imageURL= await snapshot.ref.getDownloadURL().whenComplete(() {
+      Navigator.pop(context);
+      createNewUser();
+    });
     setState(() {
       imgURL=imageURL;
     });
   }
-  Future<File?>chooseImgGallery()async{
-    final pickedfile=await _picker.pickImage(source: ImageSource.gallery);
-   if(pickedfile!=null) {
-     setState(() {
-     imagefile=pickedfile;
-    });
-   }
-    final File file= File(imagefile!.path);
-    return file;
-  }
+
   checkInternetConnection() async {
   if(await commonMethods.checkConnectivity(context)){
     signUpFormValidation();
   }
   }
   signUpFormValidation(){
-    if(_uNameController.text.trim().length<3){
+    if(_companyNameController.text.trim().length<3){
       commonMethods.displaySnackBar("User name must be greater than 4 ", context);
     }
     else if(_uPhoneController.text.trim().length!=10){
@@ -75,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       commonMethods.displaySnackBar("Password must be at least 6 characters ", context);
     }
     else{
-      createNewUser();
+      uploadToStorage();
     }
   }
   createNewUser() async{
@@ -96,19 +97,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if(!context.mounted) return;
     Navigator.pop(context);
     DatabaseReference userRef=FirebaseDatabase.instance.ref().child("owners").child(userFirebase!.uid);
+    DatabaseReference locRef=FirebaseDatabase.instance.ref().child("spaceships").child("company");
     Map userDataMap={
       "uid" :  userFirebase.uid,
-      "image": imgURL,
-      "name": _uNameController.text.trim(),
+      "logo": imgURL,
+      "company": _companyNameController.text.trim(),
       "email": _emailController.text.trim(),
       "phone": _uPhoneController.text.trim(),
       "blockstatus": "no",
-      "company":"",
       "spaceships": ""
     };
+    Map<String,Object> logo={
+      "logo": imgURL
+    };
+    Map<String,Object> comp={
+      _companyNameController.text.trim(): logo
+    };
+    locRef.update(comp);
+    setState(() {
+      spaceShipCompanyName= _companyNameController.text.trim();
+    });
     User? user = FirebaseAuth.instance.currentUser;
     if (user!= null && !user.emailVerified) {
-      userRef.set(userDataMap);
+      userRef.set(userDataMap).whenComplete(() => Navigator.pop(context));
       await user.sendEmailVerification().whenComplete(() => Navigator.push(context, MaterialPageRoute(builder: (c)=>const  EmailVerification())));
     }
   }
@@ -178,10 +189,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 children: [
                   TextField(
-                    controller: _uNameController,
+                    controller: _companyNameController,
                     keyboardType: TextInputType.name,
                     decoration: const InputDecoration(
-                        labelText: "username"
+                        labelText: "Company Name"
                     ),
                   ),
                   const SizedBox(

@@ -6,6 +6,6 @@ String imgURL="";
 String imgURL1="";
 String imgURL2="";
 String imgURL3="";
-
+String spaceShipCompanyName="";
 //UI Themes
 Color mainTheme=const Color(0xff103232);

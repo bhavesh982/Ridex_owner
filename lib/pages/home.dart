@@ -17,20 +17,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final TextEditingController _nameController= TextEditingController();
-  final TextEditingController _typesController= TextEditingController();
+  int value=0;
+  final TextEditingController _modelNameController= TextEditingController();
+  final TextEditingController _typeController= TextEditingController();
   final TextEditingController _seatsController= TextEditingController();
   final TextEditingController _thrustController= TextEditingController();
+  final TextEditingController _baseController= TextEditingController();
+  final TextEditingController _levelController= TextEditingController();
+  final TextEditingController _rateController= TextEditingController();
   CommonMethods commonMethods= CommonMethods();
   XFile? imagefile1;
-  XFile? imagefile2;
-  XFile? imagefile3;
   final ImagePicker _picker1= ImagePicker();
-  final ImagePicker _picker2= ImagePicker();
-  final ImagePicker _picker3= ImagePicker();
   String timenow = DateTime.now().millisecondsSinceEpoch.toString();
   //Methods
-
   chooseImgGallery1()async{
     final pickedfile1=await _picker1.pickImage(source: ImageSource.gallery);
     if(pickedfile1!=null) {
@@ -39,41 +38,13 @@ class _HomePageState extends State<HomePage> {
       });
     }
     }
-  chooseImgGallery2()async{
-    final pickedfile2=await _picker2.pickImage(source: ImageSource.gallery);
-    if(pickedfile2!=null) {
-      setState(() {
-        imagefile2=pickedfile2;
-      });
-    }
-  }
-  chooseImgGallery3()async{
-    final pickedfile3=await _picker3.pickImage(source: ImageSource.gallery);
-    if(pickedfile3!=null) {
-      setState(() {
-        imagefile3=pickedfile3;
-      });
-    }
-  }
   checkInternetConnection() async {
     if(await commonMethods.checkConnectivity(context)){
       if(imagefile1!=null){
         uploadToStorage();
       }
       else{
-        commonMethods.displaySnackBar("Choose image 1 first", context);
-      }
-      if(imagefile2!=null){
-        uploadToStorage();
-      }
-      else{
-        commonMethods.displaySnackBar("Choose image 2 first", context);
-      }
-      if(imagefile3!=null){
-        uploadToStorage();
-      }
-      else{
-        commonMethods.displaySnackBar("Choose image 3 first", context);
+        commonMethods.displaySnackBar("Choose image first", context);
       }
     }
   }
@@ -84,51 +55,141 @@ class _HomePageState extends State<HomePage> {
         builder: (BuildContext context)=>LoadingDialog
           (messageText: "Uploading"));
 
-    Reference firebaseDatabase1 = FirebaseStorage.instance.ref().child("models").child("${timenow}1");
+    Reference firebaseDatabase1 = FirebaseStorage.instance.ref().child("models").child(timenow);
     UploadTask task1=firebaseDatabase1.putFile(File(imagefile1!.path));
     task1.whenComplete(() => Navigator.push(context, MaterialPageRoute(builder: (c)=>const UploadedContent())));
     TaskSnapshot snapshot1 = await task1;
     String imageURL1= await snapshot1.ref.getDownloadURL();
 
-    Reference firebaseDatabase2 = FirebaseStorage.instance.ref().child("models").child("${timenow}2");
-    UploadTask task2=firebaseDatabase2.putFile(File(imagefile2!.path));
-    TaskSnapshot snapshot2 = await task2;
-    String imageURL2= await snapshot2.ref.getDownloadURL();
-
-    Reference firebaseDatabase3 = FirebaseStorage.instance.ref().child("models").child("${timenow}3");
-    UploadTask task3=firebaseDatabase3.putFile(File(imagefile3!.path));
-    TaskSnapshot snapshot3 = await task3;
-    String imageURL3= await snapshot3.ref.getDownloadURL();
     setState(() {
       imgURL1=imageURL1;
-      imgURL2=imageURL2;
-      imgURL3=imageURL3;
     });
     uploadToRealtimeDatabase();
   }
   uploadToRealtimeDatabase()async{
-    User? user = FirebaseAuth.instance.currentUser;
-    DatabaseReference userRef=FirebaseDatabase.instance.ref().child("owners").child(user!.uid).child("spaceship");
-    Map images={
-      "img1" : imgURL1,
-      "img2" : imgURL2,
-      "img3" : imgURL3,
+    Map<String,Object>val={
+      "val":1
     };
-    Map userDataMap={
-      "uid" :  user.uid,
-      "images" : images,
-      "name": _typesController.text.trim(),
-      "email": _nameController.text.trim(),
-      "phone": _seatsController.text.trim(),
-      "blockstatus": "no",
+    Map<String,Object> arrangements={
+      (value+1).toString():"E",
+      (value+2).toString():"E",
+      (value+3).toString():"E",
+      (value+4).toString():"E",
+      (value+5).toString():"E",
+      (value+6).toString():"E",
+      (value+7).toString():"E",
+      (value+8).toString():"E",
+      (value+9).toString():"E",
+      (value+10).toString():"E",
     };
+    Map<String,Object> arrangements2={
+      (value+11).toString():"E",
+      (value+12).toString():"E",
+      (value+13).toString():"E",
+      (value+14).toString():"E",
+      (value+15).toString():"E",
+      (value+16).toString():"E",
+      (value+17).toString():"E",
+      (value+18).toString():"E",
+      (value+19).toString():"E",
+      (value+20).toString():"E",
+    };
+    Map<String,Object> seats={
+      "E1":arrangements,
+    };
+    Map<String,Object> seats2={
+      "E2":arrangements2,
+    };
+    seats.addAll(seats2);
 
-      await userRef.set(userDataMap);
+    User? user = FirebaseAuth.instance.currentUser;
+    DatabaseReference userRef=FirebaseDatabase.instance.ref().child("owners").child(user!.uid).child("spaceships").child("company");
+    Map<String,Object> shipMap={
+      "base" : int.parse(_baseController.text.trim()),
+      "image": imgURL1,
+      "level": int.parse(_levelController.text.trim()),
+      "mul": val,
+      "rate": int.parse(_rateController.text.trim()),
+      "seat": int.parse(_seatsController.text.trim()),
+      "seats":seats,
+      "type":_typeController.text.trim(),
+      "thrust": int.parse(_thrustController.text.trim()),
+    };
+    Map<String,Object> name={
+      _modelNameController.text.trim():shipMap
+    };
+      await userRef.update(name);
+      /////////////////////////////////////////////////////////////////////////////
+    DatabaseReference spaceshipl=FirebaseDatabase.instance.ref().child("spaceships").child("company").child(spaceShipCompanyName).child(_modelNameController.text.trim());
+    Map<String,Object>vall={
+      "val":1
+    };
+    Map<String,Object> arrangementsl={
+      (value+1).toString():"E",
+      (value+2).toString():"E",
+      (value+3).toString():"E",
+      (value+4).toString():"E",
+      (value+5).toString():"E",
+      (value+6).toString():"E",
+      (value+7).toString():"E",
+      (value+8).toString():"E",
+      (value+9).toString():"E",
+      (value+10).toString():"E",
+    };
+    Map<String,Object> seatsl={
+      "E1":arrangementsl,
+    };
+    Map<String,Object> arrangementsl2={
+      (value+11).toString():"E",
+      (value+12).toString():"E",
+      (value+13).toString():"E",
+      (value+14).toString():"E",
+      (value+15).toString():"E",
+      (value+16).toString():"E",
+      (value+17).toString():"E",
+      (value+18).toString():"E",
+      (value+19).toString():"E",
+      (value+20).toString():"E",
+    };
+    Map<String,Object> seats2l={
+      "E2":arrangementsl2,
+    };
+    seatsl.addAll(seats2l);
+
+    Map<String,Object> SpaceshipMapl={
+      "base" : _baseController.text.trim(),
+      "image": imgURL1,
+      "level": _levelController.text.trim(),
+      "mul": vall,
+      "rate": _rateController.text.trim(),
+      "seat": _seatsController.text.trim(),
+      "seats":seatsl,
+      "type":_typeController.text.trim(),
+      "thrust": _thrustController.text.trim(),
+    };
+    await spaceshipl.update(SpaceshipMapl);
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    User? user = FirebaseAuth.instance.currentUser;
+    DatabaseReference databaseReference=FirebaseDatabase.instance.ref().child("owners").child(user!.uid);
+    databaseReference.once().then((snap){
+      setState(() {
+        spaceShipCompanyName=(snap.snapshot.value as Map)["company"];
+      });
+    });
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {
     //isLoggedIn();
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          commonMethods.displaySnackBar(spaceShipCompanyName, context);
+        },
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -172,92 +233,42 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            imagefile2==null?
-            Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CircleAvatar(
-                      radius: 83,
-                      backgroundImage: AssetImage("assets/avatarman.png"),
-                    ),
-                    IconButton(onPressed: (){
-                      chooseImgGallery2();
-                    }, icon: const Icon(Icons.camera_alt))
-                  ],
-                )
-            ):Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 170,
-                    width: 170,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey,
-                      image: DecorationImage(
-                          image: FileImage(
-                              File(
-                                  imagefile2!.path
-                              )
-                          )
-                      ),
-                    ),
-                  ),
-                  IconButton(onPressed: (){
-                    chooseImgGallery2();
-                  }, icon: const Icon(Icons.camera_alt))
-                ],
-              ),
-            ),
-            imagefile3==null?
-            Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CircleAvatar(
-                      radius: 83,
-                      backgroundImage: AssetImage("assets/avatarman.png"),
-                    ),
-                    IconButton(onPressed: (){
-                      chooseImgGallery3();
-                    }, icon: const Icon(Icons.camera_alt))
-                  ],
-                )
-            ):Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 170,
-                    width: 170,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey,
-                      image: DecorationImage(
-                          image: FileImage(
-                              File(
-                                  imagefile3!.path
-                              )
-                          )
-                      ),
-                    ),
-                  ),
-                  IconButton(onPressed: (){
-                    chooseImgGallery3();
-                  }, icon: const Icon(Icons.camera_alt))
-                ],
-              ),
-            ),
             Padding(padding: EdgeInsets.all(15),
               child: Column(
                 children: [
                   TextField(
-                    controller: _nameController,
+                    controller: _modelNameController,
                     keyboardType: TextInputType.name,
                     decoration: const InputDecoration(
-                        labelText: "Name"
+                        labelText: "Model Name"
+                    ),
+                  ),
+                  TextField(
+                    controller: _baseController,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(
+                        labelText: "Base Price per 1000 light years"
+                    ),
+                  ),
+                  TextField(
+                    controller: _levelController,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(
+                        labelText: "Level of spaceship"
+                    ),
+                  ),
+                  TextField(
+                    controller: _rateController,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(
+                        labelText: "Rate "
+                    ),
+                  ),
+                  TextField(
+                    controller: _seatsController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        labelText: "seats available (in multiple of 20)"
                     ),
                   ),
                   TextField(
@@ -268,14 +279,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   TextField(
-                    controller: _seatsController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                        labelText: "seat"
-                    ),
-                  ),
-                  TextField(
-                    controller: _typesController,
+                    controller: _typeController,
                     keyboardType: TextInputType.name,
                     decoration: const InputDecoration(
                         labelText: "type"

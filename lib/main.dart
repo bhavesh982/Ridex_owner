@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Ridex',
       theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: Colors.black),
-      home: FirebaseAuth.instance.currentUser==null? const LoginScreen():const HomePage(),
+      home: const LoginScreen(),
     );
   }
 }

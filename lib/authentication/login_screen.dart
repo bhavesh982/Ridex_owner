@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
             // userName=(snap.snapshot.value as Map)["name"];
             if(!context.mounted) return;
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (c)=>const UploadedContent()));
+            Navigator.push(context, MaterialPageRoute(builder: (c)=>const HomePage()));
           }
           else{
             FirebaseAuth.instance.signOut();

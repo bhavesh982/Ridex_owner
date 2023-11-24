@@ -40,7 +40,8 @@ class _EmailVerificationState extends State<EmailVerification> {
       body: Center(
         child: ElevatedButton(
           onPressed: ()async{
-            await checkemailVerified();
+            //await checkemailVerified();
+            Navigator.push(context, MaterialPageRoute(builder: (c)=>const  LoginScreen()));
           },
           child: Text("Verify"),
         ),
