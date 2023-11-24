@@ -22,6 +22,20 @@ class _DashboardState extends State<Dashboard> {
   Random random=Random();
   int otp=0;
   @override
+  void initState() {
+    
+    User ?user=FirebaseAuth.instance.currentUser;
+    DatabaseReference fref=FirebaseDatabase.instance.ref().child("owners").child(user!.uid);
+   fref.once().then((value) {
+     setState(() {
+       spaceShipCompanyName=(value.snapshot.value as Map)["company"];
+     });
+   }
+
+   );
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: Container(
