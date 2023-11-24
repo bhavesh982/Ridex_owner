@@ -9,7 +9,7 @@ import 'package:ridex_owner/commons/common_methods.dart';
 import 'package:ridex_owner/global/global_var.dart';
 import 'package:ridex_owner/widgets/loading_dialog.dart';
 import 'dart:io';
-import '../pages/home.dart';
+import '../pages/addSpaceship.dart';
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 

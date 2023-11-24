@@ -10,13 +10,13 @@ import 'package:ridex_owner/pages/uploaded_content.dart';
 
 import '../commons/common_methods.dart';
 import '../widgets/loading_dialog.dart';
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class AddSpaceShip extends StatefulWidget {
+  const AddSpaceShip({super.key});
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AddSpaceShip> createState() => _AddSpaceShipState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AddSpaceShipState extends State<AddSpaceShip> {
   int value=0;
   final TextEditingController _modelNameController= TextEditingController();
   final TextEditingController _typeController= TextEditingController();
@@ -54,7 +54,6 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (BuildContext context)=>LoadingDialog
           (messageText: "Uploading"));
-
     Reference firebaseDatabase1 = FirebaseStorage.instance.ref().child("models").child(timenow);
     UploadTask task1=firebaseDatabase1.putFile(File(imagefile1!.path));
     task1.whenComplete(() => Navigator.push(context, MaterialPageRoute(builder: (c)=>const UploadedContent())));
@@ -159,6 +158,7 @@ class _HomePageState extends State<HomePage> {
     Map<String,Object> SpaceshipMapl={
       "base" : _baseController.text.trim(),
       "image": imgURL1,
+      "uid":user.uid,
       "level": _levelController.text.trim(),
       "mul": vall,
       "rate": _rateController.text.trim(),
@@ -185,6 +185,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     //isLoggedIn();
     return Scaffold(
+      appBar: AppBar(
+
+      ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           commonMethods.displaySnackBar(spaceShipCompanyName, context);
@@ -193,7 +197,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 200,),
+            const SizedBox(height: 10,),
             imagefile1==null?
             Center(
                 child: Column(

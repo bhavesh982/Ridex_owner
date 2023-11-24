@@ -3,7 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:ridex_owner/authentication/signup_screen.dart';
 import 'package:ridex_owner/global/global_var.dart';
-import 'package:ridex_owner/pages/home.dart';
+import 'package:ridex_owner/pages/dashboard.dart';
+import 'package:ridex_owner/pages/addSpaceship.dart';
 import 'package:ridex_owner/pages/uploaded_content.dart';
 import '../commons/common_methods.dart';
 import '../widgets/loading_dialog.dart';
@@ -56,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
             // userName=(snap.snapshot.value as Map)["name"];
             if(!context.mounted) return;
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (c)=>const HomePage()));
+            Navigator.push(context, MaterialPageRoute(builder: (c)=>const Dashboard()));
           }
           else{
             FirebaseAuth.instance.signOut();
