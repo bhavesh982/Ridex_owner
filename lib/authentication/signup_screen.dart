@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ridex_owner/authentication/email_verification.dart';
 import 'package:ridex_owner/authentication/login_screen.dart';
 import 'package:ridex_owner/commons/common_methods.dart';
+import 'package:ridex_owner/global/global_var.dart';
 import 'package:ridex_owner/widgets/loading_dialog.dart';
 import 'dart:io';
 import '../pages/home.dart';
@@ -27,7 +29,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   CommonMethods commonMethods= CommonMethods();
   XFile? imagefile;
   final ImagePicker _picker= ImagePicker();
+  String timenow = DateTime.now().millisecondsSinceEpoch.toString();
   //Methods
+  uploadToStorage()async{
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context)=>LoadingDialog
+          (messageText: "Uploading"));
+
+    Reference firebaseDatabase = FirebaseStorage.instance.ref().child("models").child("${timenow}1");
+    UploadTask task=firebaseDatabase.putFile(File(imagefile!.path));
+    TaskSnapshot snapshot = await task;
+    String imageURL= await snapshot.ref.getDownloadURL();
+    setState(() {
+      imgURL=imageURL;
+    });
+  }
   Future<File?>chooseImgGallery()async{
     final pickedfile=await _picker.pickImage(source: ImageSource.gallery);
    if(pickedfile!=null) {
@@ -80,10 +98,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     DatabaseReference userRef=FirebaseDatabase.instance.ref().child("owners").child(userFirebase!.uid);
     Map userDataMap={
       "uid" :  userFirebase.uid,
+      "image": imgURL,
       "name": _uNameController.text.trim(),
       "email": _emailController.text.trim(),
       "phone": _uPhoneController.text.trim(),
       "blockstatus": "no",
+      "company":"",
+      "spaceships": ""
     };
     User? user = FirebaseAuth.instance.currentUser;
     if (user!= null && !user.emailVerified) {
@@ -98,6 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Scaffold signUpContent(BuildContext context) {
     return Scaffold(
+      backgroundColor: mainTheme,
     body: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -117,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   const CircleAvatar(
                     radius: 83,
-                    backgroundImage: AssetImage("assets/avatarman.png"),
+                    backgroundImage: AssetImage("assets/avatarman.png"), backgroundColor: Color(0xff103232),
                   ),
                   IconButton(onPressed: (){
                     chooseImgGallery();

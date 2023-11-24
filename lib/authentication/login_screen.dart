@@ -75,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: mainTheme,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -111,8 +112,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 10,
                     ),
                     ElevatedButton(onPressed: (){
-                      checkInternetConnection();
-                    }, child: const Text("Login")),
+                                            checkInternetConnection();
+                    },
+                        child: const Text("Login")),
                     const SizedBox(
                       height: 10,
                     ),
