@@ -23,7 +23,7 @@ class _DashboardState extends State<Dashboard> {
   int otp=0;
   @override
   void initState() {
-    
+
     User ?user=FirebaseAuth.instance.currentUser;
     DatabaseReference fref=FirebaseDatabase.instance.ref().child("owners").child(user!.uid);
    fref.once().then((value) {
