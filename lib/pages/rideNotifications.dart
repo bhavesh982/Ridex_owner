@@ -61,7 +61,7 @@ class _RideNotificationsState extends State<RideNotifications> {
                     .child("owners")
                     .child(uid)
                     .child("riderequest")
-                    .child("dogaship"),
+                    .child("LNADRIDER"),
                 itemBuilder: (context, snapshot, animation, index) {
                 if(snapshot.child("status").value.toString().trim()!="rejected") {
                   return Padding(
@@ -84,7 +84,7 @@ class _RideNotificationsState extends State<RideNotifications> {
                                  children: [
                                    Padding(
                                      padding: const EdgeInsets.all(8.0),
-                                     child: Text( "Request No : ${snapshot.key.toString().toUpperCase()}",
+                                     child: Text( "Request No : ${(index+1).toString().toUpperCase()}",
                                        style: const TextStyle(
                                            fontSize: 20,
                                            fontWeight: FontWeight.bold,
