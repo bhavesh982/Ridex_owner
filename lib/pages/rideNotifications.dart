@@ -61,7 +61,7 @@ class _RideNotificationsState extends State<RideNotifications> {
                     .child("owners")
                     .child(uid)
                     .child("riderequest")
-                    .child("LNADRIDER"),
+                    .child(spaceShipSelected),
                 itemBuilder: (context, snapshot, animation, index) {
                 if(snapshot.child("status").value.toString().trim()!="rejected") {
                   return Padding(
