@@ -44,6 +44,7 @@ class _UploadedContentState extends State<UploadedContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: mainTheme,
       appBar: AppBar(
         title: const Text("AppBar"),
       ),

@@ -185,6 +185,7 @@ class _AddSpaceShipState extends State<AddSpaceShip> {
   Widget build(BuildContext context) {
     //isLoggedIn();
     return Scaffold(
+      backgroundColor: mainTheme,
       appBar: AppBar(
 
       ),

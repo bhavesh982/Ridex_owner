@@ -107,7 +107,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ),
-        backgroundColor: const Color(0xff103232),
+        backgroundColor: mainTheme,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

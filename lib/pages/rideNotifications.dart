@@ -32,7 +32,7 @@ class _RideNotificationsState extends State<RideNotifications> {
             ),
           ),
         ),
-        backgroundColor: const Color(0xff103232),
+        backgroundColor: mainTheme,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
