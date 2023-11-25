@@ -105,6 +105,7 @@ class _AddSpaceShipState extends State<AddSpaceShip> {
     DatabaseReference userRef=FirebaseDatabase.instance.ref().child("owners").child(user!.uid).child("spaceships").child("company");
     Map<String,Object> shipMap={
       "base" : int.parse(_baseController.text.trim()),
+      "uid":user.uid,
       "image": imgURL1,
       "level": int.parse(_levelController.text.trim()),
       "mul": val,
