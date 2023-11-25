@@ -25,12 +25,12 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     User ?user=FirebaseAuth.instance.currentUser;
     DatabaseReference fref=FirebaseDatabase.instance.ref().child("owners").child(user!.uid);
-   fref.once().then((value) {
-     setState(() {
-       spaceShipCompanyName=(value.snapshot.value as Map)["company"];
-     });
-   }
-   );
+    fref.once().then((value) {
+      setState(() {
+        spaceShipCompanyName=(value.snapshot.value as Map)["company"];
+      });
+    }
+    );
     super.initState();
   }
   @override
@@ -76,27 +76,27 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ),
-      floatingActionButton: Stack(
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                onPressed:(){
+        floatingActionButton: Stack(
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  onPressed:(){
 
-                },
-                child: const Icon(Icons.notifications_active),),
-              const SizedBox(height: 10,),
-              FloatingActionButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (c)=>const AddSpaceShip()));
-                },
-                child: const Icon(Icons.add),),
-            ],
-          )
-        ],
-      ),
+                  },
+                  child: const Icon(Icons.notifications_active),),
+                const SizedBox(height: 10,),
+                FloatingActionButton(
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (c)=>const AddSpaceShip()));
+                  },
+                  child: const Icon(Icons.add),),
+              ],
+            )
+          ],
+        ),
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -107,7 +107,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
         ),
-        backgroundColor: mainTheme,
+        backgroundColor: const Color(0xff103232),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

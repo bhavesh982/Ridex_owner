@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:ridex_owner/pages/dashboard.dart';
 import 'package:ridex_owner/pages/rideDashboard.dart';
 import 'package:ridex_owner/pages/rideFinish.dart';
 
@@ -56,56 +57,57 @@ class _RideConfirmOTPState extends State<RideConfirmOTP> {
               textFieldAlignment: MainAxisAlignment.spaceAround,
               fieldStyle: FieldStyle.box,
               onChanged: (pin) async{
-               await matchTheOTP();
-               if(pin==generatedOTP.toString().trim()){
-                changeStatusToConfirmed();
-               }
+                await matchTheOTP();
+                if(pin==generatedOTP.toString().trim()){
+                  changeStatusToConfirmed();
+                }
               },
             ),
           ),
           const SizedBox(height: 150,)
         ],
       ),
+
     );
   }
 
-   matchTheOTP() async{
-     showDialog(
-         barrierDismissible: false,
-         context: context,
-         builder: (BuildContext context)=>LoadingDialog
-           (messageText: "Generating otp"));
-     DatabaseReference dRef= FirebaseDatabase.instance
-         .ref()
-         .child("owners")
-         .child(uid)
-         .child("riderequest")
-         .child(spaceShipSelected)
-         .child(userUID)
-         .child("otp");
+  matchTheOTP() async{
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context)=>LoadingDialog
+          (messageText: "Generating otp"));
+    DatabaseReference dRef= FirebaseDatabase.instance
+        .ref()
+        .child("owners")
+        .child(uid)
+        .child("riderequest")
+        .child(spaceShipSelected)
+        .child(userUID)
+        .child("otp");
     await dRef.once().then((value) {
-       generatedOTP=value.snapshot.value as int;
-     }).whenComplete(() => Navigator.pop(context));
-   }
-   changeStatusToConfirmed() async {
-     showDialog(
-         barrierDismissible: false,
-         context: context,
-         builder: (BuildContext context)=>LoadingDialog
-           (messageText: "Registering your account"));
-     DatabaseReference dRef= FirebaseDatabase.instance
-         .ref()
-         .child("owners")
-         .child(uid)
-         .child("riderequest")
-         .child(spaceShipSelected)
-         .child(userUID);
-     Map<String,Object> value={
-       "status":"confirmed"
-     };
-     await dRef.update(value).whenComplete(() {
-       Navigator.pop(context);
-       Navigator.push(context, MaterialPageRoute(builder: (c)=> const RideFinish()));
-     });
-   }
+      generatedOTP=value.snapshot.value as int;
+    }).whenComplete(() => Navigator.pop(context));
+  }
+  changeStatusToConfirmed() async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context)=>LoadingDialog
+          (messageText: "Registering your account"));
+    DatabaseReference dRef= FirebaseDatabase.instance
+        .ref()
+        .child("owners")
+        .child(uid)
+        .child("riderequest")
+        .child(spaceShipSelected)
+        .child(userUID);
+    Map<String,Object> value={
+      "status":"confirmed"
+    };
+    await dRef.update(value).whenComplete(() {
+      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (c)=> const RideFinish()));
+    });
+  }
 }

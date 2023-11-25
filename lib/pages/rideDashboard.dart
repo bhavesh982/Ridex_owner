@@ -6,7 +6,6 @@ class RideDashboard extends StatefulWidget {
   @override
   State<RideDashboard> createState() => _RideDashboardState();
 }
-
 class _RideDashboardState extends State<RideDashboard> {
   @override
   Widget build(BuildContext context) {
