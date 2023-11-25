@@ -63,87 +63,89 @@ class _RideNotificationsState extends State<RideNotifications> {
                     .child("riderequest")
                     .child(spaceShipSelected),
                 itemBuilder: (context, snapshot, animation, index) {
-                if(snapshot.child("status").value.toString().trim()!="rejected" || snapshot.child("status").value.toString().trim()!="accepted") {
-                  return Padding(
-                   padding: const EdgeInsets.all(12.0),
-                   child: Container(
-                     decoration: BoxDecoration(
-                         color: const Color(0xffe9e9e9),
-                         borderRadius: BorderRadius.circular(12)
-                     ),
-                     height: 200,
-                     child: Column(
-                       children: [
-                         Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                           children: [
-                             const Text("yo"),
-                             Padding(
-                               padding: const EdgeInsets.all(8.0),
-                               child: Column(
-                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                 children: [
-                                   Padding(
-                                     padding: const EdgeInsets.all(8.0),
-                                     child: Text( "Request No : ${(index+1).toString().toUpperCase()}",
-                                       style: const TextStyle(
-                                           fontSize: 20,
-                                           fontWeight: FontWeight.bold,
-                                           color: Colors.black),),
-                                   ),
-                                   Padding(
-                                     padding: const EdgeInsets.only(left: 8),
-                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                       children: [
-                                        Text("From : ${snapshot.child("loc").value.toString()}",style:
-                                          const TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.grey
-                                          ),),
-                                         Text("To : ${snapshot.child("dest").value.toString()}",style:
-                                         const TextStyle(
-                                             fontSize: 20,
-                                             color: Colors.grey
-                                         ),),
-                                         Text("Price : ${(snapshot.child("price").value as double).toStringAsFixed(2)}",style:
-                                         const TextStyle(
-                                             fontSize: 20,
-                                             color: Colors.grey
-                                         ),),
-                                         Text("Distance : ${(snapshot.child("distance").value as double).toStringAsFixed(2)}",style:
-                                         const TextStyle(
-                                             fontSize: 20,
-                                             color: Colors.grey
-                                         ),)
-                                       ],
-                                     ),
-                                   ),
-                                   Row(
-                                     children: [
-                                       ElevatedButton(onPressed: ()async{
-                                         await changeStatusToAccepted(snapshot);
-                                         commonMethods.displaySnackBar(snapshot.key.toString(), context);
-                                        Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideConfirmOTP()));
-                                       }, child: const Text("  Accept  ")),
-                                       const SizedBox(width: 10,),
-                                       ElevatedButton(onPressed: ()async{
-                                         await changeStatusToRejected(snapshot);
-                                         commonMethods.displaySnackBar(snapshot.key.toString(), context);
-                                       }, child: const Text("  Reject  ")),
-                                     ],
-                                   )
-                                 ],
-                               ),
-                             ),
+                if(snapshot.child("status").value.toString().trim()!="rejected" ) {
+                  if(snapshot.child("status").value.toString().trim()!="accepted"){
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: const Color(0xffe9e9e9),
+                            borderRadius: BorderRadius.circular(12)
+                        ),
+                        height: 200,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text("yo"),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text( "Request No : ${(index+1).toString().toUpperCase()}",
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("From : ${snapshot.child("loc").value.toString()}",style:
+                                            const TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.grey
+                                            ),),
+                                            Text("To : ${snapshot.child("dest").value.toString()}",style:
+                                            const TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.grey
+                                            ),),
+                                            Text("Price : ${(snapshot.child("price").value as double).toStringAsFixed(2)}",style:
+                                            const TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.grey
+                                            ),),
+                                            Text("Distance : ${(snapshot.child("distance").value as double).toStringAsFixed(2)}",style:
+                                            const TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.grey
+                                            ),)
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          ElevatedButton(onPressed: ()async{
+                                            await changeStatusToAccepted(snapshot);
+                                              Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideConfirmOTP()));
+                                          }, child: const Text("  Accept  ")),
+                                          const SizedBox(width: 10,),
+                                          ElevatedButton(onPressed: ()async{
+                                            await changeStatusToRejected(snapshot);
+                                          }, child: const Text("  Reject  ")),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
 
-                           ],
-                         )
-                         // columnDetails(snapshot, index, context)
-                       ],
-                     ),
-                   ),
-                 );
+                              ],
+                            )
+                            // columnDetails(snapshot, index, context)
+                          ],
+                        ),
+                      ),
+                    );
+                  }else{
+                    return const SizedBox();
+                  }
                 }
                 else{
                   return const SizedBox();
@@ -157,6 +159,9 @@ class _RideNotificationsState extends State<RideNotifications> {
   }
 
   changeStatusToAccepted(DataSnapshot snapshot) async{
+    setState(() {
+      userUID=snapshot.key.toString();
+    });
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -190,7 +195,8 @@ class _RideNotificationsState extends State<RideNotifications> {
     Map<String,Object> value={
       "status":"rejected"
     };
-    await dRef.update(value).whenComplete(() => Navigator.pop(context));
+    await dRef.update(value).whenComplete(() {Navigator.pop(context);
+    Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideConfirmOTP()));});
   }
 }
 
