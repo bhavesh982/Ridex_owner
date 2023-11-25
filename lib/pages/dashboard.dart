@@ -32,6 +32,10 @@ class _DashboardState extends State<Dashboard> {
       });
       if(eventSnap!=""){
         showDialog(context: context, builder: (c)=>AlertDialog(
+          backgroundColor: mainTheme,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          ),
           title:Text("New Ride Request For ${eventSnap.toString()}"),
           content:Text("Click on SpaceShip ${eventSnap.toString()} to view"),
           actions: [
@@ -42,9 +46,7 @@ class _DashboardState extends State<Dashboard> {
               DatabaseReference dref=FirebaseDatabase.instance.ref().child("owners").child(user!.uid).child("notifier");
               await dref.update(mapp).whenComplete(() {
                 Navigator.pop(context);
-                Navigator.pop(context);
               });
-              if(!context.mounted) return;
             }, child: const Text("OK")),
           ],
         ));
@@ -173,8 +175,7 @@ class _DashboardState extends State<Dashboard> {
                           uid=user!.uid;
                           spaceShipSelected=snapshot.key.toString();
                         });
-                        commonMethods.displaySnackBar(snapshot.key.toString(), context);
-                       // Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideNotifications()));
+                       Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideNotifications()));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),

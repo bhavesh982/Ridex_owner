@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:ridex_owner/authentication/login_screen.dart';
-import 'package:ridex_owner/pages/addSpaceship.dart';
-import 'package:ridex_owner/pages/dashboard.dart';
 import 'package:ridex_owner/splashScreen/splashScreen.dart';
 import 'firebase_options.dart';
 
