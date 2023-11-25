@@ -33,6 +33,7 @@ class _RideNotificationsState extends State<RideNotifications> {
         backgroundColor: mainTheme,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(
               height: 10,
@@ -70,12 +71,10 @@ class _RideNotificationsState extends State<RideNotifications> {
                           borderRadius: BorderRadius.circular(12)
                       ),
                       height: 200,
-                      child: Column(
+                      child:Column(
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text("yo"),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
@@ -117,22 +116,22 @@ class _RideNotificationsState extends State<RideNotifications> {
                                         ],
                                       ),
                                     ),
-                                    Row(
-                                      children: [
-                                        ElevatedButton(onPressed: ()async{
-                                          await changeStatusToAccepted(snapshot);
-                                          Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideConfirmOTP()));
-                                        }, child: const Text("  Accept  ")),
-                                        const SizedBox(width: 10,),
-                                        ElevatedButton(onPressed: ()async{
-                                          await changeStatusToRejected(snapshot);
-                                        }, child: const Text("  Reject  ")),
-                                      ],
-                                    )
+
                                   ],
                                 ),
                               ),
-
+                              Column(
+                                children: [
+                                  ElevatedButton(onPressed: ()async{
+                                    await changeStatusToAccepted(snapshot);
+                                    Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideConfirmOTP()));
+                                  }, child: const Text("  Accept  ")),
+                                  const SizedBox(width: 10,),
+                                  ElevatedButton(onPressed: ()async{
+                                    await changeStatusToRejected(snapshot);
+                                  }, child: const Text("  Reject  ")),
+                                ],
+                              )
                             ],
                           )
                           // columnDetails(snapshot, index, context)
