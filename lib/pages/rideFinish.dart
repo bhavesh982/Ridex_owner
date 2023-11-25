@@ -14,7 +14,10 @@ class _RideFinishState extends State<RideFinish> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          backgroundColor: mainTheme,
+        ),
+        backgroundColor: mainTheme,
         body: Container(
           child: Column(
             children: [
@@ -31,29 +34,36 @@ class _RideFinishState extends State<RideFinish> {
                     ),),
                   ),
                   const SizedBox(height: 20,),
-                  SizedBox(height: 50,),
                   const Padding(
                     padding: EdgeInsets.only(left: 30),
                     child: Text("Make sure to drive sober "),
                   ),
-
-                  const SizedBox(height: 100,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 60),
-                    child: ElevatedButton(onPressed: (){
-                      showDialog(context: context, builder: (c)=>AlertDialog(
-                        title: const Text("Confirmation"),
-                        content: const Text("are you sure you want to end the ride..."),
-                        actions: [
-                          TextButton(onPressed: (){
-                            finishRide();
-                          }, child: const Text("Yes")),
-                          TextButton(onPressed: (){
-                            Navigator.pop(context);
-                          }, child: const Text("Cancel"))
-                        ],
-                      ));
-                    }, child: const Text("Submit")),
+                  const SizedBox(height: 300,),
+                  Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:buttonTheme
+                          ),
+                            onPressed: (){
+                          showDialog(context: context, builder: (c)=>AlertDialog(
+                            title: const Text("Confirmation"),
+                            content: const Text("are you sure you want to end the ride..."),
+                            actions: [
+                              TextButton(onPressed: (){
+                                finishRide();
+                              }, child: const Text("Yes")),
+                              TextButton(onPressed: (){
+                                Navigator.pop(context);
+                              }, child: const Text("Cancel"))
+                            ],
+                          ));
+                        }, child: const Text("Finish")),
+                      ),
+                    ),
                   ),
 
                 ],
