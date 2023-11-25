@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:ridex_owner/pages/dashboard.dart';
 import 'package:ridex_owner/pages/rideDashboard.dart';
 import 'package:ridex_owner/pages/rideFinish.dart';
 
@@ -21,51 +22,52 @@ class _RideConfirmOTPState extends State<RideConfirmOTP> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff103232),
-      appBar: AppBar(
         backgroundColor: const Color(0xff103232),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 40,left: 40),
-            child: ListTile(
-              title: Text("Secret code!",style: TextStyle(
-                  fontSize: 22
-              ),),
-              subtitle: Text("for your journey."),
-            ),
-          ),
-          SizedBox(
-            height: 100,
-            width: 300,
-            child: OTPTextField(
-              controller: controller,
-              otpFieldStyle: OtpFieldStyle(
-                  backgroundColor: const Color(0xff0A7F7F),
-                  borderColor: Colors.transparent
+        appBar: AppBar(
+          backgroundColor: const Color(0xff103232),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 40,left: 40),
+              child: ListTile(
+                title: Text("Secret code!",style: TextStyle(
+                    fontSize: 22
+                ),),
+                subtitle: Text("for your journey."),
               ),
-              length: 4,
-              width: MediaQuery.of(context).size.width,
-              fieldWidth: 50,
-              style: const TextStyle(
-                  fontSize: 17,
-                  color: Colors.white
-              ),
-              textFieldAlignment: MainAxisAlignment.spaceAround,
-              fieldStyle: FieldStyle.box,
-              onChanged: (pin) async{
-               await matchTheOTP();
-               if(pin==generatedOTP.toString().trim()){
-                changeStatusToConfirmed();
-               }
-              },
             ),
-          ),
-          const SizedBox(height: 150,)
-        ],
-      ),
+            SizedBox(
+              height: 100,
+              width: 300,
+              child: OTPTextField(
+                controller: controller,
+                otpFieldStyle: OtpFieldStyle(
+                    backgroundColor: const Color(0xff0A7F7F),
+                    borderColor: Colors.transparent
+                ),
+                length: 4,
+                width: MediaQuery.of(context).size.width,
+                fieldWidth: 50,
+                style: const TextStyle(
+                    fontSize: 17,
+                    color: Colors.white
+                ),
+                textFieldAlignment: MainAxisAlignment.spaceAround,
+                fieldStyle: FieldStyle.box,
+                onChanged: (pin) async{
+                 await matchTheOTP();
+                 if(pin==generatedOTP.toString().trim()){
+                  changeStatusToConfirmed();
+                 }
+                },
+              ),
+            ),
+            const SizedBox(height: 150,)
+          ],
+        ),
+
     );
   }
 
