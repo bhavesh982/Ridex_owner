@@ -19,17 +19,48 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   CommonMethods commonMethods = CommonMethods();
   Random random=Random();
+  bool loadingDone=false;
   int otp=0;
+  String eventSnap="";
   @override
   void initState() {
     User ?user=FirebaseAuth.instance.currentUser;
+    DatabaseReference dref=FirebaseDatabase.instance.ref().child("owners").child(user!.uid).child("notifier").child("notifier");
+    dref.onValue.listen((event) {
+      setState(() {
+        eventSnap=event.snapshot.value as String;
+      });
+      if(eventSnap!=""){
+        showDialog(context: context, builder: (c)=>AlertDialog(
+          title:Text("New Ride Request For ${eventSnap.toString()}"),
+          content:Text("Click on SpaceShip ${eventSnap.toString()} to view"),
+          actions: [
+            TextButton(onPressed: () async {
+              Map<String,Object> mapp={
+                "notifier": ""
+              };
+              DatabaseReference dref=FirebaseDatabase.instance.ref().child("owners").child(user!.uid).child("notifier");
+              await dref.update(mapp).whenComplete(() {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              });
+              if(!context.mounted) return;
+            }, child: const Text("OK")),
+          ],
+        ));
+      }
+    });
     DatabaseReference fref=FirebaseDatabase.instance.ref().child("owners").child(user!.uid);
     fref.once().then((value) {
       setState(() {
         spaceShipCompanyName=(value.snapshot.value as Map)["company"];
       });
     }
-    );
+    ).whenComplete(() {
+      setState(() {
+        loadingDone=true;
+      });
+    });
     super.initState();
   }
   @override
@@ -83,7 +114,6 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 FloatingActionButton(
                   onPressed:(){
-
                   },
                   child: const Icon(Icons.notifications_active),),
                 const SizedBox(height: 10,),
@@ -127,24 +157,24 @@ class _DashboardState extends State<Dashboard> {
               height: 10,
             ),
             Flexible(
-              child: FirebaseAnimatedList(
+              child: loadingDone?FirebaseAnimatedList(
                 defaultChild: const Center(child: LinearProgressIndicator()),
                 query: FirebaseDatabase.instance
                     .ref()
                     .child("spaceships")
                     .child("company")
-                    .child(spaceShipCompanyName),
+                    .child(spaceShipCompanyName.trim()),
                 itemBuilder: (context, snapshot, animation, index) {
                   if (snapshot.key.toString() != "logo") {
                     return GestureDetector(
                       onTap: (){
-                        commonMethods.displaySnackBar(snapshot.value.toString(), context);
                         User? user = FirebaseAuth.instance.currentUser;
                         setState(() {
                           uid=user!.uid;
                           spaceShipSelected=snapshot.key.toString();
                         });
-                        Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideNotifications()));
+                        commonMethods.displaySnackBar(snapshot.key.toString(), context);
+                       // Navigator.push(context, MaterialPageRoute(builder: (c)=>const RideNotifications()));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -218,7 +248,7 @@ class _DashboardState extends State<Dashboard> {
                     return const SizedBox();
                   }
                 },
-              ),
+              ): Container(),
             ),
           ],
         ));

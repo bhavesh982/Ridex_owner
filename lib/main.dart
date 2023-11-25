@@ -4,14 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:ridex_owner/authentication/login_screen.dart';
 import 'package:ridex_owner/pages/addSpaceship.dart';
 import 'package:ridex_owner/pages/dashboard.dart';
+import 'package:ridex_owner/splashScreen/splashScreen.dart';
 import 'firebase_options.dart';
 
+Future<void> initializeDefault() async {
+  FirebaseApp app = await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  print('Initialized default app $app');
+}
 Future<void> main() async{
  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
+ runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,9 +28,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
      return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Ridex',
+      title: 'DEFAULT',
       theme: ThemeData.dark().copyWith(scaffoldBackgroundColor: Colors.black),
-      home: FirebaseAuth.instance.currentUser==null? const LoginScreen():const Dashboard(),
+      home: const SplashScreen(),
     );
   }
 }

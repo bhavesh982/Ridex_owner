@@ -6,6 +6,7 @@ String userUID="";
 int generatedOTP=0;
 String imgURL="";
 String uid="";
+var userReffed;
 String imgURL1="";
 String imgURL2="";
 String imgURL3="";

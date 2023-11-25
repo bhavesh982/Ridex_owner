@@ -105,7 +105,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       "email": _emailController.text.trim(),
       "phone": _uPhoneController.text.trim(),
       "blockstatus": "no",
-      "spaceships": ""
+      "spaceships": "",
+      "notifier":""
     };
     Map<String,Object> logo={
       "logo": imgURL
