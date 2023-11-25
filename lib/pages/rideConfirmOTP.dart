@@ -4,6 +4,7 @@ import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:ridex_owner/pages/rideDashboard.dart';
+import 'package:ridex_owner/pages/rideFinish.dart';
 
 import '../commons/common_methods.dart';
 import '../global/global_var.dart';
@@ -54,10 +55,10 @@ class _RideConfirmOTPState extends State<RideConfirmOTP> {
               ),
               textFieldAlignment: MainAxisAlignment.spaceAround,
               fieldStyle: FieldStyle.box,
-              onCompleted: (pin) async{
+              onChanged: (pin) async{
                await matchTheOTP();
                if(pin==generatedOTP.toString().trim()){
-                Navigator.push(context, MaterialPageRoute(builder: (c)=> const RideDashboard()));
+                changeStatusToConfirmed();
                }
               },
             ),
@@ -85,5 +86,26 @@ class _RideConfirmOTPState extends State<RideConfirmOTP> {
     await dRef.once().then((value) {
        generatedOTP=value.snapshot.value as int;
      }).whenComplete(() => Navigator.pop(context));
+   }
+   changeStatusToConfirmed() async {
+     showDialog(
+         barrierDismissible: false,
+         context: context,
+         builder: (BuildContext context)=>LoadingDialog
+           (messageText: "Registering your account"));
+     DatabaseReference dRef= FirebaseDatabase.instance
+         .ref()
+         .child("owners")
+         .child(uid)
+         .child("riderequest")
+         .child(spaceShipSelected)
+         .child(userUID);
+     Map<String,Object> value={
+       "status":"confirmed"
+     };
+     await dRef.update(value).whenComplete(() {
+       Navigator.pop(context);
+       Navigator.push(context, MaterialPageRoute(builder: (c)=> const RideFinish()));
+     });
    }
 }
