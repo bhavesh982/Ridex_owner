@@ -52,6 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       Navigator.pop(context);
       createNewUser();
     });
+
     setState(() {
       imgURL=imageURL;
     });
@@ -95,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         })
     ).user;
     if(!context.mounted) return;
-    Navigator.pop(context);
+    User? user = FirebaseAuth.instance.currentUser;
     DatabaseReference userRef=FirebaseDatabase.instance.ref().child("owners").child(userFirebase!.uid);
     DatabaseReference locRef=FirebaseDatabase.instance.ref().child("spaceships").child("company");
     Map userDataMap={
@@ -114,14 +115,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Map<String,Object> comp={
       _companyNameController.text.trim(): logo
     };
-    locRef.update(comp);
+
+    //
     setState(() {
       spaceShipCompanyName= _companyNameController.text.trim();
     });
-    User? user = FirebaseAuth.instance.currentUser;
     if (user!= null && !user.emailVerified) {
-      userRef.set(userDataMap).whenComplete(() => Navigator.pop(context));
-      await user.sendEmailVerification().whenComplete(() => Navigator.push(context, MaterialPageRoute(builder: (c)=>const  EmailVerification())));
+      userRef.set(userDataMap).whenComplete(()  async {
+        await locRef.update(comp).whenComplete(() async {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=>const  EmailVerification()));
+        });
+      });
     }
   }
   @override

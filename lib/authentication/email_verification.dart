@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ridex_owner/authentication/login_screen.dart';
 import 'package:ridex_owner/commons/common_methods.dart';
-import '../pages/addSpaceship.dart';
+import 'package:ridex_owner/global/global_var.dart';
 import '../widgets/loading_dialog.dart';
 class EmailVerification extends StatefulWidget {
   const EmailVerification({super.key});
@@ -23,8 +23,7 @@ class _EmailVerificationState extends State<EmailVerification> {
     await user?.reload().whenComplete(() => Navigator.pop(context));
     bool check = user!.emailVerified;
     if(check){
-      Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (c)=>const  LoginScreen()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (c)=>const  LoginScreen()));
     }
     else{
       await user.reload().whenComplete(() => Navigator.pop(context));
@@ -35,15 +34,25 @@ class _EmailVerificationState extends State<EmailVerification> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Verify"),
+        backgroundColor: mainTheme,
       ),
+      backgroundColor: mainTheme,
       body: Center(
-        child: ElevatedButton(
-          onPressed: ()async{
-            //await checkemailVerified();
-            Navigator.push(context, MaterialPageRoute(builder: (c)=>const  LoginScreen()));
-          },
-          child: Text("Verify"),
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: buttonTheme
+              ),
+              onPressed: ()async{
+                await checkemailVerified();
+              },
+              child: const Text("Verify"),
+            ),
+          ),
         ),
       ),
     );
